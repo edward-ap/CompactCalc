@@ -1,4 +1,4 @@
-package aeeims.math.calc;
+package aeeims.math.calc.rdp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Ed Aponasko
  * @version 1.0, June 2021
  */
-public class CompactCalc {
+public class RDPCalc {
 
     private static final char EOF = '\0';
 
@@ -31,7 +31,7 @@ public class CompactCalc {
     // our current position within the expression
     private int pos;
 
-    public CompactCalc(String code) {
+    public RDPCalc(String code) {
         this.code = code;
         this.length = code.length();
     }
@@ -151,6 +151,7 @@ public class CompactCalc {
                     result = Math.pow(result,  parenthesis());
                     continue;
                 case '!' :
+                    if (result % 1 != 0) throw new RuntimeException("Error :: Cannot calculate factorial of float number!");
                     getNext();
                     long fact = 1;
                     for (int i = 2; i <= result; i++) {
@@ -186,6 +187,7 @@ public class CompactCalc {
     private double primary() {
         final char current = peek();
         if (current == '-') {
+            // unary minus
             getNext();
             return -tokenizeNumber();
         }
@@ -204,10 +206,7 @@ public class CompactCalc {
     private double tokenizeFuncOrConstant() {
         final StringBuilder buffer = new StringBuilder();
         char current = peek();
-        while (true) {
-            if (!Character.isLetterOrDigit(current) && (current != '_') && (current != '$') ) {
-                break;
-            }
+        while (Character.isLetterOrDigit(current) || (current == '_') || (current == '$')) {
             buffer.append(current);
             current = getNext();
         }
