@@ -3,8 +3,8 @@ Java examples for parsing/calculating complex mathematical expressions.<br><br>
 <b>AST</b> : Implementing  
 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> method with lexical analyzer and parser.<br><br>
 <b>RDP</b> : Implementing 
-<a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">recursive descent parser method</a>. All in one class. 
-Check my <a href="https://github.com/edward-ap/ZUtils">example of usage RDP calculator</a> as webMethods Integraiton Server serice.
+<a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">recursive descent parser</a> method. All in one class. 
+Check my <a href="https://github.com/edward-ap/ZUtils">example of usage RDP calculator</a> as webMethods Integraiton Server service.
 <h1>Usage</h1>
 System.out.println( new RDPCalc("(8.5 + 0.75 * 2) * 3 - 2^4").execute() );
 <h1>Output of test.TestCalc_AST/RDP class</h1>
