@@ -1,9 +1,13 @@
 <h1>CompactCalc</h1>
-Java mathematical parser/calculator for complex expressions. Implements 
-<a href="https://en.wikipedia.org/wiki/Recursive_descent_parser" title="Recursive descent parser">recursive descent parser method</a>.
+Java examples for parsing/calculating complex mathematical expressions.<br><br>
+<b>AST</b> : Implementing  
+<a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> method with lexical analyzer and parser.<br><br>
+<b>RDP</b> : Implementing 
+<a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">recursive descent parser method</a>. All in one class. 
+Check my <a href="https://github.com/edward-ap/ZUtils">example of usage RDP calculator</a> as webMethods Integraiton Server serice.
 <h1>Usage</h1>
-System.out.println( new CompactCalc("(8.5 + 0.75 * 2) * 3 - 2^4").execute() );
-<h1>Output of TestCalc class</h1>
+System.out.println( new RDPCalc("(8.5 + 0.75 * 2) * 3 - 2^4").execute() );
+<h1>Output of test.TestCalc_AST/RDP class</h1>
 TEST 01 : 2 + 2 * 2 = 6.0 : OK!<br>
 TEST 02 : 2 + 2 - 2 * 2 / 2 = 2.0 : OK!<br>
 TEST 03 : ((2 + 2) * 2) / 2 = 4.0 : OK!<br>
@@ -23,4 +27,5 @@ TEST 14 : a / 2 / 2 = 38.5 : OK!<br>
 === ERROR CASES ===<br>
 TEST 15 : 3 / (6 - 4 : FAILED! Error :: Expected closing parenthesis<br>
 TEST 16 : 2.15.25 + 8 : FAILED! Error :: Invalid float number!<br>
-TEST 17 : x + 2 : FAILED! Error :: Cannot recognize constant 'x'<br>
+TEST 17 : x + 2 : FAILED! Error :: Cannot recognize variable 'x'<br>
+TEST 18 : 3.5! : FAILED! Error :: Cannot calculate factorial of float number!<br>
