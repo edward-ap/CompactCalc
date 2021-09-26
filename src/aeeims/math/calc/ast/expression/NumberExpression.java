@@ -1,5 +1,7 @@
 package aeeims.math.calc.ast.expression;
 
+import java.math.BigDecimal;
+
 /*
  * AST number expressions implementation
  *
@@ -8,20 +10,20 @@ package aeeims.math.calc.ast.expression;
  */
 public class NumberExpression implements Expression {
 
-    private final double value;
+    private final BigDecimal value;
 
-    public NumberExpression(double value) {
+    public NumberExpression(BigDecimal value) {
         this.value = value;
     }
 
     @Override
-    public double eval() {
+    public BigDecimal eval() {
         return value;
     }
 
     @Override
     public String toString() {
-        return Double.toString(value);
+        return value.toString();
     }
 
 }

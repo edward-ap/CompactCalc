@@ -6,6 +6,7 @@ import aeeims.math.calc.ast.core.Token;
 import aeeims.math.calc.ast.expression.Expression;
 import aeeims.math.calc.ast.lib.Constants;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /*
@@ -26,11 +27,11 @@ public class ASTCalc {
         this.lexer = new Lexer(code);
     }
 
-    public void setVar(String name, Double value) {
-        Constants.set(name, value);
+    public void setVar(String name, Number value) {
+        Constants.set(name, new BigDecimal(value.toString()));
     }
 
-    public double execute() {
+    public Number execute() {
         List<Token> tokens = lexer.tokenize();
         List<Expression> result = new Parser(tokens).parse();
         return result.get(0).eval();

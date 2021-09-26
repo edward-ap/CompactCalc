@@ -1,5 +1,6 @@
 package aeeims.math.calc.rdp;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +16,11 @@ public class RDPCalc {
     private static final char EOF = '\0';
 
     // List of pre-defined constants like pi, e... etc.
-    private static Map<String, Double> CONSTANTS;
+    private static Map<String, BigDecimal> CONSTANTS;
     static {
         CONSTANTS = new HashMap<>();
-        CONSTANTS.put("PI", Math.PI);
-        CONSTANTS.put("E", Math.E);
+        CONSTANTS.put("PI", new BigDecimal(Math.PI));
+        CONSTANTS.put("E", new BigDecimal(Math.E));
     }
 
     // expression
@@ -36,13 +37,13 @@ public class RDPCalc {
         this.length = code.length();
     }
 
-    public void setVar(String name, Double value) {
-        CONSTANTS.put(name, value);
+    public void setVar(String name, Number value) {
+        CONSTANTS.put(name, new BigDecimal(value.toString()));
     }
 
-    public double execute() throws Exception {
+    public Number execute() throws Exception {
         if (code.isEmpty()) throw new Exception("Error :: Empty expression!");
-        double result = expression();
+        BigDecimal result = expression();
         if (peek() != EOF)
             throw new Exception("Error :: Cannot parse following code : " + code.substring(pos));
         return result;
@@ -55,25 +56,25 @@ public class RDPCalc {
     /*
         Wrapper for calculated expression
      */
-    private double expression() {
+    private BigDecimal expression() {
         return addition();
     }
 
     /*
         Method to handle addition and subtraction
      */
-    private double addition() {
-        double result = multiplication();
+    private BigDecimal addition() {
+        BigDecimal result = multiplication();
         while (true) {
             char next = peek();
             switch(next) {
                 case '+' :
                     getNext();
-                    result = result + multiplication();
+                    result = result.add(multiplication());
                     continue;
                 case '-' :
                     getNext();
-                    result = result - multiplication();
+                    result = result.subtract(multiplication());
                     continue;
             }
             break;
@@ -103,34 +104,34 @@ public class RDPCalc {
                 NOT 0111  (decimal 7)
                   = 1000  (decimal 8)
      */
-    private double multiplication() {
-        double result = exponentiation();
+    private BigDecimal multiplication() {
+        BigDecimal result = exponentiation();
         while (true) {
             char next = peek();
             switch(next) {
                 case '*' :
                     getNext();
-                    result = result * exponentiation();
+                    result = result.multiply(exponentiation());
                     continue;
                 case '/' :
                     getNext();
-                    result = result / exponentiation();
+                    result = result.divide(exponentiation());
                     continue;
                 case '%' :
                     getNext();
-                    result = result % exponentiation();
+                    result = result.remainder(exponentiation());
                     continue;
                 case '~' :
                     getNext();
-                    result = ~ (int) expression();
+                    result = new BigDecimal(~(int) expression().intValue());
                     continue;
                 case '&' :
                     getNext();
-                    result = (int) result & (int) expression();
+                    result = new BigDecimal(result.intValue() & expression().intValue());
                     continue;
                 case '|' :
                     getNext();
-                    result = (int) result | (int) expression();
+                    result = new BigDecimal(result.intValue() | expression().intValue());
                     continue;
             }
             break;
@@ -141,21 +142,21 @@ public class RDPCalc {
     /*
         Method to care about exponents
      */
-    private double exponentiation() {
-        double result = parenthesis();
+    private BigDecimal exponentiation() {
+        BigDecimal result = parenthesis();
         while (true) {
             char next = peek();
             switch(next) {
                 case '^' :
                     getNext();
-                    result = Math.pow(result,  parenthesis());
+                    result = result.pow(parenthesis().intValue());
                     continue;
                 case '!' :
-                    if (result % 1 != 0) throw new RuntimeException("Error :: Cannot calculate factorial of float number!");
+                    if (result.doubleValue() % 1 != 0) throw new RuntimeException("Error :: Cannot calculate factorial of float number!");
                     getNext();
-                    long fact = 1;
-                    for (int i = 2; i <= result; i++) {
-                        fact = fact * i;
+                    BigDecimal fact = new BigDecimal(1);
+                    for (int i = 2; i <= result.intValue(); i++) {
+                        fact = fact.multiply(BigDecimal.valueOf(i));
                     }
                     result = fact;
                     continue;
@@ -168,11 +169,11 @@ public class RDPCalc {
     /*
         Method to handle opening and closing parenthesis in expression
      */
-    private double parenthesis() {
+    private BigDecimal parenthesis() {
         char current = peek();
         if (current == '(') {
             getNext(); // skipping (
-            double result = expression();
+            BigDecimal result = expression();
             current = peek();
             if (current != ')') throw new RuntimeException("Error :: Expected closing parenthesis");
             getNext(); // skipping )
@@ -184,12 +185,12 @@ public class RDPCalc {
     /*
         Primary method to handle Numbers, Float numbers, unary operator, constants and pre-defined functions
      */
-    private double primary() {
+    private BigDecimal primary() {
         final char current = peek();
         if (current == '-') {
             // unary minus
             getNext();
-            return -tokenizeNumber();
+            return tokenizeNumber().negate();
         }
         if (Character.isDigit(current)) {
             return tokenizeNumber();
@@ -197,13 +198,13 @@ public class RDPCalc {
         if (Character.isLetter(current)) {
             return tokenizeFuncOrConstant();
         }
-        return 0;
+        return new BigDecimal(0);
     }
 
     /*
         Helper to take care of all constants and functions
      */
-    private double tokenizeFuncOrConstant() {
+    private BigDecimal tokenizeFuncOrConstant() {
         final StringBuilder buffer = new StringBuilder();
         char current = peek();
         while (Character.isLetterOrDigit(current) || (current == '_') || (current == '$')) {
@@ -216,32 +217,33 @@ public class RDPCalc {
             return CONSTANTS.get(word);
         }
         // constant not found, check for function
-        Double result = null;
+        BigDecimal result = null;
         if (current == '(') {
             getNext(); // skipping (
+            double value = expression().doubleValue();
             switch (word) {
                 // sine function
-                case "sin" : result = Math.sin(expression()); break;
+                case "sin" : result = new BigDecimal(Math.sin(value)); break;
                 // hyperbolic sine function
-                case "sinh": result = Math.sinh(expression()); break;
+                case "sinh": result = new BigDecimal(Math.sinh(value)); break;
                 // cosine function
-                case "cos": result = Math.cos(expression()); break;
+                case "cos": result = new BigDecimal(Math.cos(value)); break;
                 // tangent function
-                case "tan": result = Math.tan(expression()); break;
+                case "tan": result = new BigDecimal(Math.tan(value)); break;
                 // cotangent function
-                case "ctg": result = 1 / Math.tan(expression()); break;
+                case "ctg": result = new BigDecimal(1).divide(new BigDecimal(Math.tan(value)) ); break;
                 // absolute value of a number
-                case "abs": result = Math.abs(expression()); break;
+                case "abs": result = new BigDecimal(Math.abs(value)); break;
                 // logarithm of a given number x
-                case "ln": result = Math.log(expression()); break;
+                case "ln": result = new BigDecimal(Math.log(value)); break;
                 // base 10 logarithm of a number
-                case "lg": result = Math.log10(expression()); break;
+                case "lg": result = new BigDecimal(Math.log10(value)); break;
                 // square root
-                case "sqrt": result = Math.sqrt(expression()); break;
+                case "sqrt": result = new BigDecimal(Math.sqrt(value)); break;
                 // to radians
-                case "toRadians": result = Math.toRadians(expression()); break;
+                case "toRadians": result = new BigDecimal(Math.toRadians(value)); break;
                 // to degrees
-                case "toDegrees": result = Math.toDegrees(expression()); break;
+                case "toDegrees": result = new BigDecimal(Math.toDegrees(value) ); break;
             }
             if (result == null) throw new RuntimeException("Error :: Cannot recognize function '" + word + "'");
             current = peek();
@@ -256,7 +258,7 @@ public class RDPCalc {
     /*
         Numbers and floats parser
      */
-    private double tokenizeNumber() {
+    private BigDecimal tokenizeNumber() {
         final StringBuilder sb = new StringBuilder();
         char current = peek();
         while (true) {
@@ -269,7 +271,7 @@ public class RDPCalc {
             sb.append(current);
             current = getNext();
         }
-        return new Double(sb.toString());
+        return new BigDecimal(sb.toString());
     }
 
     /*

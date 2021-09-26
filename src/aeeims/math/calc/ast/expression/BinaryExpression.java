@@ -1,5 +1,7 @@
 package aeeims.math.calc.ast.expression;
 
+import java.math.BigDecimal;
+
 /*
  * AST binary expressions implementation
  *
@@ -19,26 +21,26 @@ public class BinaryExpression implements Expression {
     }
 
     @Override
-    public double eval() {
+    public BigDecimal eval() {
         switch(operation) {
-            case '-' : return expr1.eval() - expr2.eval();
-            case '*' : return expr1.eval() * expr2.eval();
-            case '/' : return expr1.eval() / expr2.eval();
-            case '^' : return Math.pow(expr1.eval(), expr2.eval());
-            case '%' : return expr1.eval() % expr2.eval();
+            case '-' : return expr1.eval().subtract(expr2.eval());
+            case '*' : return expr1.eval().multiply(expr2.eval());
+            case '/' : return expr1.eval().divide(expr2.eval());
+            case '^' : return expr1.eval().pow(expr2.eval().intValue());
+            case '%' : return expr1.eval().remainder(expr2.eval());
             case '!' : {
-                long fact = 1;
-                for (int i = 2; i <= expr1.eval(); i++) {
-                    fact = fact * i;
+                BigDecimal fact = new BigDecimal(1);
+                for (int i = 2; i <= expr1.eval().intValue(); i++) {
+                    fact = fact.multiply(new BigDecimal(i));
                 }
                 return fact;
             }
-            case '~' : return ~ (int) expr1.eval();
-            case '&' : return (int) expr1.eval() & (int) expr2.eval();
-            case '|' : return (int) expr1.eval() | (int) expr2.eval();
+            case '~' : return new BigDecimal(~expr1.eval().intValue());
+            case '&' : return new BigDecimal(expr1.eval().intValue() & expr2.eval().intValue());
+            case '|' : return new BigDecimal(expr1.eval().intValue() | expr2.eval().intValue());
             case '+' :
             default:
-                return expr1.eval() + expr2.eval();
+                return expr1.eval().add(expr2.eval());
         }
     }
 

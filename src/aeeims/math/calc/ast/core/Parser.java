@@ -2,6 +2,7 @@ package aeeims.math.calc.ast.core;
 
 import aeeims.math.calc.ast.expression.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class Parser {
     private Expression primary() {
         final Token current = getNext();
         if (nextMatch(TokenType.NUMBER)) {
-            return new NumberExpression(Double.parseDouble(current.getToken()));
+            return new NumberExpression(new BigDecimal(current.getToken()));
         }
         if (nextMatch(TokenType.CONST)) {
             return new ConstantExpression(current.getToken());
@@ -131,7 +132,7 @@ public class Parser {
             }
         }
         if (nextMatch(TokenType.HEX_NUMBER)) {
-            return new NumberExpression(Long.parseLong(current.getToken(), 16));
+            return new NumberExpression(new BigDecimal(Long.parseLong(current.getToken(), 16)));
         }
         if (nextMatch(TokenType.LPAREN)) {
             Expression result = expression();

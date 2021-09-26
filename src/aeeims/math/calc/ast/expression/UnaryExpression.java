@@ -1,5 +1,7 @@
 package aeeims.math.calc.ast.expression;
 
+import java.math.BigDecimal;
+
 /*
  * AST unary expressions to support negative numbers
  *
@@ -17,8 +19,8 @@ public class UnaryExpression implements Expression {
     }
 
     @Override
-    public double eval() {
-        if (operation == '-') return -expr1.eval();
+    public BigDecimal eval() {
+        if (operation == '-') return expr1.eval().negate();
         return expr1.eval();
     }
 

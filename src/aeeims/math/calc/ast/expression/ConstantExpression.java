@@ -2,6 +2,8 @@ package aeeims.math.calc.ast.expression;
 
 import aeeims.math.calc.ast.lib.Constants;
 
+import java.math.BigDecimal;
+
 /*
  * AST constants expressions to manage pre-defined constants
  *
@@ -17,9 +19,9 @@ public class ConstantExpression implements Expression {
     }
 
     @Override
-    public double eval() {
+    public BigDecimal eval() {
         if (!Constants.isExists(name)) throw new RuntimeException("Error :: Cannot recognize constant '" + name + "'");
-        return Constants.get(name);
+        return new BigDecimal(Constants.get(name).toString());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package aeeims.math.calc.ast.lib;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,30 +33,30 @@ public class Functions {
         return FUNCTIONS.contains(key);
     }
 
-    public static double execute(String key, double value) {
+    public static BigDecimal execute(String key, BigDecimal value) {
         switch (key) {
             // sine function
-            case "sin" : return Math.sin(value);
+            case "sin" : return new BigDecimal(Math.sin(value.doubleValue()));
             // hyperbolic sine function
-            case "sinh": return Math.sinh(value);
+            case "sinh": return new BigDecimal(Math.sinh(value.doubleValue()));
             // cosine function
-            case "cos": return Math.cos(value);
+            case "cos": return new BigDecimal(Math.cos(value.doubleValue()));
             // tangent function
-            case "tan": return Math.tan(value);
+            case "tan": return new BigDecimal(Math.tan(value.doubleValue()));
             // cotangent function
-            case "ctg": return 1 / Math.tan(value);
+            case "ctg": return new BigDecimal(1).divide(new BigDecimal(Math.tan(value.doubleValue())) );
             // absolute value of a number
-            case "abs": return Math.abs(value);
+            case "abs": return new BigDecimal(Math.abs(value.doubleValue()));
             // logarithm of a given number x
-            case "ln": return Math.log(value);
+            case "ln": return new BigDecimal(Math.log(value.doubleValue()));
             // base 10 logarithm of a number
-            case "lg": return Math.log10(value);
+            case "lg": return new BigDecimal(Math.log10(value.doubleValue()));
             // square root
-            case "sqrt": return Math.sqrt(value);
+            case "sqrt": return new BigDecimal(Math.sqrt(value.doubleValue()));
             // to radians
-            case "toRadians": return Math.toRadians(value);
+            case "toRadians": return new BigDecimal(Math.toRadians(value.doubleValue()));
             // to degrees
-            case "toDegrees": return Math.toDegrees(value);
+            case "toDegrees": return new BigDecimal(Math.toDegrees(value.doubleValue()));
         }
         throw new RuntimeException("Error :: Cannot recognize function '" + key + "'");
     }

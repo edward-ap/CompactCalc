@@ -1,5 +1,6 @@
 package aeeims.math.calc.ast.lib;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class Variables {
 
-    private static Map<String, Double> VARS;
+    private static Map<String, BigDecimal> VARS;
 
     public Variables() {
         VARS = new HashMap<>();
@@ -21,12 +22,12 @@ public class Variables {
         return !VARS.isEmpty() && VARS.containsKey(name);
     }
 
-    public static double get(String name) {
+    public static BigDecimal get(String name) {
         if (!isExists(name)) throw new RuntimeException("Error :: Cannot recognize variable '" + name + "'");
         return VARS.get(name);
     }
 
-    public static void set(String name, double value) {
+    public static void set(String name, BigDecimal value) {
         VARS.put(name, value);
     }
 

@@ -2,6 +2,8 @@ package aeeims.math.calc.ast.expression;
 
 import aeeims.math.calc.ast.lib.Variables;
 
+import java.math.BigDecimal;
+
 /*
  * AST variable expressions to manage runtime variables
  *
@@ -17,7 +19,7 @@ public class VariableExpression implements Expression {
     }
 
     @Override
-    public double eval() {
+    public BigDecimal eval() {
         if (!Variables.isExists(name)) throw new RuntimeException("Error :: Cannot recognize variable '" + name + "'");
         return Variables.get(name);
     }

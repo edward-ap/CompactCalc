@@ -1,5 +1,7 @@
 package aeeims.math.calc.ast.expression;
 
+import java.math.BigDecimal;
+
 /*
  * AST expression interface
  *
@@ -8,6 +10,6 @@ package aeeims.math.calc.ast.expression;
  */
 public interface Expression {
 
-    double eval();
+    BigDecimal eval();
 
 }

@@ -3,6 +3,8 @@ package aeeims.math.calc.ast.expression;
 import aeeims.math.calc.ast.lib.Constants;
 import aeeims.math.calc.ast.lib.Functions;
 
+import java.math.BigDecimal;
+
 /*
  * AST function expressions to invoke pre-defined functions
  *
@@ -20,7 +22,7 @@ public class FunctionExpression implements Expression {
     }
 
     @Override
-    public double eval() {
+    public BigDecimal eval() {
         if (!Functions.isExists(name)) throw new RuntimeException("Error :: Cannot recognize function '" + name + "'");
         return Functions.execute(name, expr.eval());
     }
